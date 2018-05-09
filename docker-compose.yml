@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    ports:
+      - 9090:9090
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 9300:3000
+    depends_on:
+      - prometheus
+    volumes:
+      - grafana-data:/var/lib/grafana
+    environment:
+      - GF_SERVER_ROOT_URL=${GF_SERVER_ROOT_URL:="http://localhost:9300"}
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD:=admin}
+
+volumes:
+  grafana-data:
+  prometheus-data:
